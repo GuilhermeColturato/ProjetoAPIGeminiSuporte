@@ -63,6 +63,30 @@ header h1 {
     border-top-left-radius: 0;
 }
 
+.message-text {
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.message-text code {
+    background-color: #d1d9e6;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.message-text pre {
+    background-color: #333;
+    color: #f8f8f2;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.message-text ul, .message-text ol {
+    padding-left: 1.5rem;
+}
+
 .chat-input-area {
     display: flex;
     padding: 1rem;

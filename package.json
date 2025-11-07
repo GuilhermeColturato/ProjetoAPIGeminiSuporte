@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/GuilhermeColturato/ProjetoAPIGeminiSuporte#readme",
   "dependencies": {
-    "cors": "^2.8.5",
+    "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   },
