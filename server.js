@@ -15,6 +15,7 @@ if (!process.env.GEMINI_API_KEY) {
 }
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
 
 app.post('/api/generate', async (req, res) => {
   const { prompt } = req.body;
@@ -24,7 +25,7 @@ app.post('/api/generate', async (req, res) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: geminiModel });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
