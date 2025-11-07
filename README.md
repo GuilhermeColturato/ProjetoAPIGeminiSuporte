@@ -1,152 +1,116 @@
-# 🤖 Gemini API Technical Support
+# 🤖 Suporte Técnico com API Gemini
 
 ![Node.js](https://img.shields.io/badge/Node.js-20.x-blue.svg)
 ![Express](https://img.shields.io/badge/Express-Framework-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-This project is a technical support application that uses the Gemini API to answer technical questions, usage doubts, and product or service configurations.
+Este projeto é uma aplicação de suporte técnico que utiliza a API Gemini para responder a perguntas técnicas, dúvidas de uso e configurações de produtos ou serviços.
 
 ---
 
-## 🧠 Objective
+## 🧠 Objetivo
 
-Create a **Node.js API** that:
-- Accepts a text prompt via a **POST** request;
-- Sends the content to the **Gemini 1.5 Flash model**;
-- Returns the generated response in **JSON** format.
-- Provides a simple web interface to interact with the API.
+Criar uma **API em Node.js** que:
+- Aceita um prompt de texto via requisição **POST**;
+- Envia o conteúdo para o modelo **Gemini 1.5 Flash**;
+- Retorna a resposta gerada em formato **JSON**.
+- Fornece uma interface web simples para interagir com a API.
 
 ---
 
-## ⚙️ Prerequisites
+## ⚙️ Pré-requisitos
 
 - Node.js **20.x+**
-- Active account on [Google AI Studio](https://aistudio.google.com/)
-- A **valid API key** (`GOOGLE_API_KEY`)
-  🔗 Generate your key at: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-- Consult the **costs and usage limits** at:
+- Conta ativa no [Google AI Studio](https://aistudio.google.com/)
+- Uma **chave de API válida** (`GEMINI_API_KEY`)
+  🔗 Gere sua chave em: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+- Consulte os **custos e limites de uso** em:
   💰 [https://ai.google.dev/pricing?hl=pt-br](https://ai.google.dev/pricing?hl=pt-br)
 
 ---
 
-## 📦 Installation and Configuration
+## 📦 Instalação e Configuração
 
-### 1️⃣ Clone the repository
+### 1️⃣ Clonar o repositório
 
 ```bash
 git clone https://github.com/seuusuario/gemini-suporte-api.git
 cd gemini-suporte-api
 ```
 
-### 2️⃣ Install dependencies
+### 2️⃣ Instalar dependências
 
 ```bash
 npm install
 ```
 
-### 3️⃣ Create `.env` file
+### 3️⃣ Criar arquivo `.env`
 
-Create a `.env` file in the project root containing:
+Crie um arquivo `.env` na raiz do projeto contendo:
 
 ```env
-GOOGLE_API_KEY=your_key_here
+GEMINI_API_KEY=sua_chave_aqui
 ```
 
 ---
 
-## 🧩 Main code (`server.js`)
+## ▶️ Executando o Servidor
 
-```javascript
-const express = require('express');
-const dotenv = require('dotenv');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-dotenv.config();
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(express.static('public'));
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-
-app.post('/api/generate', async (req, res) => {
-  const { prompt } = req.body;
-
-  if (!prompt) {
-    return res.status(400).json({ error: 'Prompt is required' });
-  }
-
-  try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    res.json({ response: text });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to generate response from Gemini API' });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-```
-
----
-
-## ▶️ Running the Server
+### Linux / macOS (bash)
 
 ```bash
 npm start
 ```
 
-Access at:
+### Windows (PowerShell)
+
+```powershell
+npm start
+```
+
+Acesse em:
 👉 [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 ---
 
-## 🧪 API Test
+## 🧪 Teste da API
 
-### Via **cURL**
+### Via **cURL** (bash)
 
 ```bash
 curl -X POST http://127.0.0.1:3000/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "Explain what a generative AI is in a few words"}'
+  -d '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
 ```
 
-### Expected Response
+### Via **PowerShell**
+
+```powershell
+Invoke-RestMethod -Uri http://127.0.0.1:3000/api/generate -Method Post -ContentType "application/json" -Body '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
+```
+
+### Resposta Esperada
 
 ```json
 {
-  "response": "Generative AI creates new content, such as text, images, or sounds, by learning patterns from large volumes of data."
+  "response": "A IA generativa cria novos conteúdos, como textos, imagens ou sons, aprendendo padrões de grandes volumes de dados."
 }
 ```
 
 ---
 
-## 🧰 Dependencies
+## 🧰 Dependências
 
-| Package                  | Description                                   |
+| Pacote                  | Descrição                                   |
 | ----------------------- | ------------------------------------------- |
-| **express**             | Modern and performant web framework        |
-| **dotenv**              | Reading environment variables from `.env` |
-| **@google/generative-ai**| Official Google Gemini library         |
-| **nodemon**             | Development dependency for auto-restarting the server       |
+| **express**             | Framework web moderno e performático        |
+| **dotenv**              | Leitura das variáveis de ambiente do `.env` |
+| **@google/generative-ai**| Biblioteca oficial do Google Gemini         |
+| **nodemon**             | Dependência de desenvolvimento para reiniciar o servidor automaticamente       |
 
 ---
 
-## 🧾 License
+## 🧾 Licença
 
-This project is under the **MIT** license.
-Feel free to use, modify, and share.
-
----
-
-### 👨‍💻 Author
-
-Developed by **Jules**
- ✉️ [jules@example.com](mailto:jules@example.com)
+Este projeto está sob a licença **MIT**.
+Sinta-se à vontade para usar, modificar e compartilhar.

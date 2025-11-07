@@ -6,7 +6,7 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const prompt = promptInput.value;
-  responseContainer.innerHTML = 'Loading...';
+  responseContainer.innerHTML = 'Carregando...';
 
   try {
     const response = await fetch('/api/generate', {
@@ -25,6 +25,6 @@ form.addEventListener('submit', async (e) => {
       responseContainer.innerHTML = data.response;
     }
   } catch (error) {
-    responseContainer.innerHTML = 'An error occurred while fetching the response.';
+    responseContainer.innerHTML = 'Ocorreu um erro ao buscar a resposta.';
   }
 });

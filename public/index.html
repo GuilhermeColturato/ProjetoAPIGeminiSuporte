@@ -1,19 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Support AI</title>
+  <title>Suporte Técnico com IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-</head><body>
+</head>
+<body>
+
+  <header>
+    <h1>Suporte Técnico com IA</h1>
+  </header>
+
   <div class="container">
-    <h1>Technical Support AI</h1>
     <form id="prompt-form">
-      <textarea id="prompt-input" placeholder="Ask a technical question..." required></textarea>
-      <button type="submit">Ask</button>
+      <textarea id="prompt-input" placeholder="Digite sua dúvida..." required></textarea>
+      <button type="submit">Enviar</button>
     </form>
-    <div id="response-container"></div>
+    <div id="response-container">
+      <!-- A resposta da IA aparecerá aqui -->
+    </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
