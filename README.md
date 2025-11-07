@@ -1,187 +1,152 @@
-# 🤖 Gemini FastAPI – Integração Simples com a API do Google Gemini
+# 🤖 Gemini API Technical Support
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-Framework-green.svg)
+![Node.js](https://img.shields.io/badge/Node.js-20.x-blue.svg)
+![Express](https://img.shields.io/badge/Express-Framework-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-Este projeto demonstra uma integração **simples e funcional** entre o **FastAPI** e a **API Gemini (Google AI Studio)**.  
-Ele recebe um *prompt* de texto e retorna a resposta gerada pelo modelo de IA.
+This project is a technical support application that uses the Gemini API to answer technical questions, usage doubts, and product or service configurations.
 
 ---
 
-## 🧠 Objetivo
+## 🧠 Objective
 
-Criar uma **API em Python** que:
-- Aceita um *prompt* de texto via requisição **POST**;
-- Envia o conteúdo para o **modelo Gemini 2.5 Flash**;
-- Retorna a resposta gerada em formato **JSON**.
+Create a **Node.js API** that:
+- Accepts a text prompt via a **POST** request;
+- Sends the content to the **Gemini 1.5 Flash model**;
+- Returns the generated response in **JSON** format.
+- Provides a simple web interface to interact with the API.
 
 ---
 
-## ⚙️ Pré-requisitos
+## ⚙️ Prerequisites
 
-- Python **3.9+**
-- Conta ativa no [Google AI Studio](https://aistudio.google.com/)
-- Uma **chave de API válida** (`GOOGLE_API_KEY`)  
-  🔗 Gere sua chave em: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-- Consulte os **custos e limites de uso** em:  
+- Node.js **20.x+**
+- Active account on [Google AI Studio](https://aistudio.google.com/)
+- A **valid API key** (`GOOGLE_API_KEY`)
+  🔗 Generate your key at: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+- Consult the **costs and usage limits** at:
   💰 [https://ai.google.dev/pricing?hl=pt-br](https://ai.google.dev/pricing?hl=pt-br)
 
 ---
 
-## 📦 Instalação e Configuração
+## 📦 Installation and Configuration
 
-### 1️⃣ Clonar o repositório
-
-```bash
-git clone https://github.com/seuusuario/gemini-fastapi.git
-cd gemini-fastapi
-
-### 2️⃣ Criar ambiente virtual
+### 1️⃣ Clone the repository
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # Linux / Mac
-# .venv\Scripts\activate    # Windows
+git clone https://github.com/seuusuario/gemini-suporte-api.git
+cd gemini-suporte-api
 ```
 
-### 3️⃣ Instalar dependências
+### 2️⃣ Install dependencies
 
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
-### 4️⃣ Criar arquivo `.env`
+### 3️⃣ Create `.env` file
 
-Crie um arquivo `.env` na raiz do projeto contendo:
+Create a `.env` file in the project root containing:
 
 ```env
-GOOGLE_API_KEY=sua_chave_aqui
+GOOGLE_API_KEY=your_key_here
 ```
 
 ---
 
-## 🧩 Código principal (`main.py`)
+## 🧩 Main code (`server.js`)
 
-```python
-from fastapi import FastAPI
-from pydantic import BaseModel
-import google.generativeai as genai
-import os
-from dotenv import load_dotenv
+```javascript
+const express = require('express');
+const dotenv = require('dotenv');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-# Carrega variáveis do .env
-load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+dotenv.config();
 
-# Modelo padrão
-MODEL_NAME = "gemini-2.5-flash"
+const app = express();
+const port = process.env.PORT || 3000;
 
-app = FastAPI()
+app.use(express.json());
+app.use(express.static('public'));
 
-# Listar modelos disponíveis
-for m in genai.list_models():
-    print(m.name)
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-# Modelo da requisição
-class PromptRequest(BaseModel):
-    prompt: str
+app.post('/api/generate', async (req, res) => {
+  const { prompt } = req.body;
 
-@app.post("/generate")
-def generate_text(request: PromptRequest):
-    try:
-        model = genai.GenerativeModel(MODEL_NAME)
-        response = model.generate_content(request.prompt)
-        return {"response": response.text}
-    except Exception as e:
-        return {"error": str(e)}
+  if (!prompt) {
+    return res.status(400).json({ error: 'Prompt is required' });
+  }
+
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    res.json({ response: text });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to generate response from Gemini API' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 ```
 
 ---
 
-## ▶️ Executando o Servidor
+## ▶️ Running the Server
 
 ```bash
-uvicorn main:app --reload
+npm start
 ```
 
-Acesse em:
-👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
-Documentação interativa (Swagger UI):
-👉 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+Access at:
+👉 [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 ---
 
-## 🧪 Teste da API
+## 🧪 API Test
 
 ### Via **cURL**
 
 ```bash
-curl -X POST http://127.0.0.1:8000/generate \
+curl -X POST http://127.0.0.1:3000/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
+  -d '{"prompt": "Explain what a generative AI is in a few words"}'
 ```
 
-### Resposta esperada
+### Expected Response
 
 ```json
 {
-  "response": "A IA generativa cria novos conteúdos, como textos, imagens ou sons, aprendendo padrões de grandes volumes de dados."
+  "response": "Generative AI creates new content, such as text, images, or sounds, by learning patterns from large volumes of data."
 }
 ```
 
 ---
 
-## 🧰 Dependências
+## 🧰 Dependencies
 
-| Pacote                  | Descrição                                   |
+| Package                  | Description                                   |
 | ----------------------- | ------------------------------------------- |
-| **fastapi**             | Framework web moderno e performático        |
-| **uvicorn**             | Servidor ASGI para executar o FastAPI       |
-| **google-generativeai** | Biblioteca oficial do Google Gemini         |
-| **python-dotenv**       | Leitura das variáveis de ambiente do `.env` |
+| **express**             | Modern and performant web framework        |
+| **dotenv**              | Reading environment variables from `.env` |
+| **@google/generative-ai**| Official Google Gemini library         |
+| **nodemon**             | Development dependency for auto-restarting the server       |
 
 ---
 
-## 🧩 Arquivo `requirements.txt`
+## 🧾 License
 
-```txt
-fastapi
-uvicorn
-google-generativeai
-python-dotenv
-```
+This project is under the **MIT** license.
+Feel free to use, modify, and share.
 
 ---
 
-## ⚠️ Dicas
+### 👨‍💻 Author
 
-* Para listar todos os modelos disponíveis:
-
-  ```python
-  for m in genai.list_models():
-      print(m.name)
-  ```
-
----
-
-## 💡 Próximos Passos
-
-* Adicionar **CORS** para integrar com um front-end;
-* Criar uma interface simples em **HTML/JS** para enviar prompts;
-* Publicar no **Render**, **Railway** ou **Google Cloud Run**.
-
----
-
-## 🧾 Licença
-
-Este projeto está sob a licença **MIT**.
-Sinta-se à vontade para usar, modificar e compartilhar.
-
----
-
-### 👨‍💻 Autor
-
-Desenvolvido por **André Silva**
- ✉️ [alsilva@uniara.edu.br](mailto:alsilva@uniara.edu.br)
+Developed by **Jules**
+ ✉️ [jules@example.com](mailto:jules@example.com)
