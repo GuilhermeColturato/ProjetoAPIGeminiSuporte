@@ -12,7 +12,8 @@ Este projeto é uma aplicação de suporte técnico que utiliza a API Gemini par
 
 Criar uma **API em Node.js** que:
 - Aceita um prompt de texto via requisição **POST**;
-- Envia o conteúdo para o modelo configurado na variável de ambiente `GEMINI_MODEL` (com fallback para `gemini-1.5-pro`);
+- Envia o conteúdo para o modelo configurado na variável de ambiente `GEMINI_MODEL`;
+- Utiliza o modelo `gemini-1.5-pro` como fallback, caso a variável de ambiente não esteja definida.
 - Retorna a resposta gerada em formato **JSON**.
 - Fornece uma interface web simples para interagir com a API.
 
@@ -52,7 +53,8 @@ Crie um arquivo `.env` na raiz do projeto contendo as seguintes variáveis:
 # Sua chave de API do Google AI Studio
 GEMINI_API_KEY=sua_chave_aqui
 
-# (Opcional) O modelo a ser utilizado. O padrão é gemini-1.5-pro.
+# Modelo oficial e recomendado para o projeto.
+# Se esta variável não for definida, o sistema usará 'gemini-1.5-pro' como padrão.
 GEMINI_MODEL=gemini-1.5-pro
 ```
 
