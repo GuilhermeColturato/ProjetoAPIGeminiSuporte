@@ -47,7 +47,7 @@ npm install
 
 ### 3️⃣ Criar arquivo `.env`
 
-Crie um arquivo `.env` na raiz do projeto contendo as seguintes variáveis:
+Crie um arquivo `.env` na raiz do projeto, a partir do arquivo `.env.example`, e adicione suas credenciais:
 
 ```env
 # Sua chave de API do Google AI Studio
@@ -57,6 +57,8 @@ GEMINI_API_KEY=sua_chave_aqui
 # Se esta variável não for definida, o sistema usará 'gemini-1.5-pro' como padrão.
 GEMINI_MODEL=gemini-1.5-pro
 ```
+
+**⚠️ Importante:** Se você encontrar um erro "404 Not Found" ao tentar gerar uma resposta, verifique se o modelo especificado em `GEMINI_MODEL` está correto e se sua chave de API tem as permissões necessárias para acessá-lo.
 
 ---
 
