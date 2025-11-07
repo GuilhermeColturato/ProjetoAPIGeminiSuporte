@@ -1,30 +1,31 @@
-# 🤖 Gemini FastAPI – Integração Simples com a API do Google Gemini
+# 🤖 Suporte Técnico com API Gemini
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-Framework-green.svg)
+![Node.js](https://img.shields.io/badge/Node.js-20.x-blue.svg)
+![Express](https://img.shields.io/badge/Express-Framework-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-Este projeto demonstra uma integração **simples e funcional** entre o **FastAPI** e a **API Gemini (Google AI Studio)**.  
-Ele recebe um *prompt* de texto e retorna a resposta gerada pelo modelo de IA.
+Este projeto é uma aplicação de suporte técnico que utiliza a API Gemini para responder a perguntas técnicas, dúvidas de uso e configurações de produtos ou serviços.
 
 ---
 
 ## 🧠 Objetivo
 
-Criar uma **API em Python** que:
-- Aceita um *prompt* de texto via requisição **POST**;
-- Envia o conteúdo para o **modelo Gemini 2.5 Flash**;
+Criar uma **API em Node.js** que:
+- Aceita um prompt de texto via requisição **POST**;
+- Envia o conteúdo para o modelo configurado na variável de ambiente `GEMINI_MODEL`;
+- Utiliza o modelo `gemini-1.5-pro` como fallback, caso a variável de ambiente não esteja definida.
 - Retorna a resposta gerada em formato **JSON**.
+- Fornece uma interface web simples para interagir com a API.
 
 ---
 
 ## ⚙️ Pré-requisitos
 
-- Python **3.9+**
+- Node.js **20.x+**
 - Conta ativa no [Google AI Studio](https://aistudio.google.com/)
-- Uma **chave de API válida** (`GOOGLE_API_KEY`)  
+- Uma **chave de API válida** (`GEMINI_API_KEY`)
   🔗 Gere sua chave em: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-- Consulte os **custos e limites de uso** em:  
+- Consulte os **custos e limites de uso** em:
   💰 [https://ai.google.dev/pricing?hl=pt-br](https://ai.google.dev/pricing?hl=pt-br)
 
 ---
@@ -34,96 +35,67 @@ Criar uma **API em Python** que:
 ### 1️⃣ Clonar o repositório
 
 ```bash
-git clone https://github.com/seuusuario/gemini-fastapi.git
-cd gemini-fastapi
-
-### 2️⃣ Criar ambiente virtual
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Linux / Mac
-# .venv\Scripts\activate    # Windows
+git clone https://github.com/seuusuario/gemini-suporte-api.git
+cd gemini-suporte-api
 ```
 
-### 3️⃣ Instalar dependências
+### 2️⃣ Instalar dependências
 
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
-### 4️⃣ Criar arquivo `.env`
+### 3️⃣ Criar arquivo `.env`
 
-Crie um arquivo `.env` na raiz do projeto contendo:
+Crie um arquivo `.env` na raiz do projeto contendo as seguintes variáveis:
 
 ```env
-GOOGLE_API_KEY=sua_chave_aqui
-```
+# Sua chave de API do Google AI Studio
+GEMINI_API_KEY=sua_chave_aqui
 
----
-
-## 🧩 Código principal (`main.py`)
-
-```python
-from fastapi import FastAPI
-from pydantic import BaseModel
-import google.generativeai as genai
-import os
-from dotenv import load_dotenv
-
-# Carrega variáveis do .env
-load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-# Modelo padrão
-MODEL_NAME = "gemini-2.5-flash"
-
-app = FastAPI()
-
-# Listar modelos disponíveis
-for m in genai.list_models():
-    print(m.name)
-
-# Modelo da requisição
-class PromptRequest(BaseModel):
-    prompt: str
-
-@app.post("/generate")
-def generate_text(request: PromptRequest):
-    try:
-        model = genai.GenerativeModel(MODEL_NAME)
-        response = model.generate_content(request.prompt)
-        return {"response": response.text}
-    except Exception as e:
-        return {"error": str(e)}
+# Modelo oficial e recomendado para o projeto.
+# Se esta variável não for definida, o sistema usará 'gemini-1.5-pro' como padrão.
+GEMINI_MODEL=gemini-1.5-pro
 ```
 
 ---
 
 ## ▶️ Executando o Servidor
 
+### Linux / macOS (bash)
+
 ```bash
-uvicorn main:app --reload
+npm start
+```
+
+### Windows (PowerShell)
+
+```powershell
+npm start
 ```
 
 Acesse em:
-👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
-Documentação interativa (Swagger UI):
-👉 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+👉 [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 ---
 
 ## 🧪 Teste da API
 
-### Via **cURL**
+### Via **cURL** (bash)
 
 ```bash
-curl -X POST http://127.0.0.1:8000/generate \
+curl -X POST http://127.0.0.1:3000/api/generate \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
 ```
 
-### Resposta esperada
+### Via **PowerShell**
+
+```powershell
+Invoke-RestMethod -Uri http://127.0.0.1:3000/api/generate -Method Post -ContentType "application/json" -Body '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
+```
+
+### Resposta Esperada
 
 ```json
 {
@@ -137,40 +109,10 @@ curl -X POST http://127.0.0.1:8000/generate \
 
 | Pacote                  | Descrição                                   |
 | ----------------------- | ------------------------------------------- |
-| **fastapi**             | Framework web moderno e performático        |
-| **uvicorn**             | Servidor ASGI para executar o FastAPI       |
-| **google-generativeai** | Biblioteca oficial do Google Gemini         |
-| **python-dotenv**       | Leitura das variáveis de ambiente do `.env` |
-
----
-
-## 🧩 Arquivo `requirements.txt`
-
-```txt
-fastapi
-uvicorn
-google-generativeai
-python-dotenv
-```
-
----
-
-## ⚠️ Dicas
-
-* Para listar todos os modelos disponíveis:
-
-  ```python
-  for m in genai.list_models():
-      print(m.name)
-  ```
-
----
-
-## 💡 Próximos Passos
-
-* Adicionar **CORS** para integrar com um front-end;
-* Criar uma interface simples em **HTML/JS** para enviar prompts;
-* Publicar no **Render**, **Railway** ou **Google Cloud Run**.
+| **express**             | Framework web moderno e performático        |
+| **dotenv**              | Leitura das variáveis de ambiente do `.env` |
+| **@google/generative-ai**| Biblioteca oficial do Google Gemini         |
+| **nodemon**             | Dependência de desenvolvimento para reiniciar o servidor automaticamente       |
 
 ---
 
@@ -178,10 +120,3 @@ python-dotenv
 
 Este projeto está sob a licença **MIT**.
 Sinta-se à vontade para usar, modificar e compartilhar.
-
----
-
-### 👨‍💻 Autor
-
-Desenvolvido por **André Silva**
- ✉️ [alsilva@uniara.edu.br](mailto:alsilva@uniara.edu.br)
