@@ -13,9 +13,9 @@ Este projeto é uma aplicação de suporte técnico que utiliza a API Gemini par
 Criar uma **API em Node.js** que:
 - Aceita um prompt de texto via requisição **POST**;
 - Envia o conteúdo para o modelo configurado na variável de ambiente `GEMINI_MODEL`;
-- Utiliza o modelo `gemini-1.5-pro` como fallback, caso a variável de ambiente não esteja definida.
+- Utiliza o modelo `gemini-2.5-flash`.
 - Retorna a resposta gerada em formato **JSON**.
-- Fornece uma interface web simples para interagir com a API.
+- Fornece uma interface web para interagir com a API.
 
 ---
 
@@ -35,7 +35,7 @@ Criar uma **API em Node.js** que:
 ### 1️⃣ Clonar o repositório
 
 ```bash
-git clone https://github.com/seuusuario/gemini-suporte-api.git
+git clone https://github.com/GuilhermeColturato/ProjetoAPIGeminiSuporte.git
 cd gemini-suporte-api
 ```
 
@@ -55,7 +55,7 @@ GEMINI_API_KEY=sua_chave_aqui
 
 # Modelo oficial e recomendado para o projeto.
 # Se esta variável não for definida, o sistema usará 'gemini-1.5-pro' como padrão.
-GEMINI_MODEL=gemini-1.5-pro
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
 **⚠️ Importante:** Se você encontrar um erro "404 Not Found" ao tentar gerar uma resposta, verifique se o modelo especificado em `GEMINI_MODEL` está correto e se sua chave de API tem as permissões necessárias para acessá-lo.
@@ -77,7 +77,7 @@ npm start
 ```
 
 Acesse em:
-👉 [http://127.0.0.1:3000](http://127.0.0.1:3000)
+👉 [http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -89,3 +89,4 @@ Acesse em:
 | **dotenv**              | Leitura das variáveis de ambiente do `.env` |
 | **@google/generative-ai**| Biblioteca oficial do Google Gemini         |
 | **nodemon**             | Dependência de desenvolvimento para reiniciar o servidor automaticamente       |
+
