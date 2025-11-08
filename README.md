@@ -81,32 +81,6 @@ Acesse em:
 
 ---
 
-## 🧪 Teste da API
-
-### Via **cURL** (bash)
-
-```bash
-curl -X POST http://127.0.0.1:3000/api/generate \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
-```
-
-### Via **PowerShell**
-
-```powershell
-Invoke-RestMethod -Uri http://127.0.0.1:3000/api/generate -Method Post -ContentType "application/json" -Body '{"prompt": "Explique o que é IA generativa em poucas palavras"}'
-```
-
-### Resposta Esperada
-
-```json
-{
-  "response": "A IA generativa cria novos conteúdos, como textos, imagens ou sons, aprendendo padrões de grandes volumes de dados."
-}
-```
-
----
-
 ## 🧰 Dependências
 
 | Pacote                  | Descrição                                   |
@@ -115,10 +89,3 @@ Invoke-RestMethod -Uri http://127.0.0.1:3000/api/generate -Method Post -ContentT
 | **dotenv**              | Leitura das variáveis de ambiente do `.env` |
 | **@google/generative-ai**| Biblioteca oficial do Google Gemini         |
 | **nodemon**             | Dependência de desenvolvimento para reiniciar o servidor automaticamente       |
-
----
-
-## 🧾 Licença
-
-Este projeto está sob a licença **MIT**.
-Sinta-se à vontade para usar, modificar e compartilhar.
