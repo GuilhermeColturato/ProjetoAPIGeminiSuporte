@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const dotenv = require('dotenv');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -13,21 +12,17 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-// Lista modelos direto no REST v1beta (sem usar SDK)
 app.get('/models', async (_req, res) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`;
 
-    // Node 18+ já tem fetch global
     const r = await fetch(url);
     if (!r.ok) {
       const txt = await r.text();
       return res.status(r.status).json({ error: `HTTP ${r.status}: ${txt}` });
     }
     const data = await r.json();
-
-    // Retorna só os nomes para ficar limpo
     const names = (data.models || []).map(m => m.name);
     return res.json({ models: names });
   } catch (e) {
@@ -41,12 +36,8 @@ app.use(express.static('public'));
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-/* =========================
-   1) Classificador simples
-   ========================= */
-
 const TECH_KEYWORDS = [
-  // redes / SO / linha de comando
+  // redes / SO
   'ip','ipv4','ipv6','dns','gateway','proxy','wifi','wi-fi','rede','roteador','modem','ethernet',
   'ping','traceroute','ipconfig','ifconfig','cmd','prompt','powershell','terminal',
   'porta','porta 80','porta 3000','firewall','antivirus','antivírus','malware',
@@ -90,12 +81,6 @@ function scoreByKeywords(text, keywords) {
   return score;
 }
 
-/**
- * Retorna { isTech, confidence }
- * - techScore >= 2  => é tech (alta confiança)
- * - offScore >= 2 && techScore === 0 => não é tech (alta confiança)
- * - senão => em dúvida, tratamos como tech (para NÃO bloquear indevidamente)
- */
 function classifyTopic(userText) {
   const text = norm(userText);
   const techScore = scoreByKeywords(text, TECH_KEYWORDS);
@@ -103,41 +88,10 @@ function classifyTopic(userText) {
 
   if (techScore >= 2) return { isTech: true,  confidence: 0.9 };
   if (offScore >= 2 && techScore === 0) return { isTech: false, confidence: 0.9 };
-  return { isTech: true, confidence: 0.5 }; // favorece responder
+  return { isTech: true, confidence: 0.5 }; 
 }
 
-/* =========================
-   2) Respostas rápidas
-   ========================= */
-
-function quickAnswers(userMessage) {
-  const msg = norm(userMessage);
-
-  // "como ver o IP do meu computador?"
-  if (/(ver|descobrir|saber).*\bip\b/.test(msg) || /\bipconfig\b/.test(msg)) {
-    return `
-Windows
-1) Pressione Win + R → digite: cmd
-2) No Prompt, rode: ipconfig
-3) Veja “Endereço IPv4”.
-
-Linux/macOS
-1) Abra o terminal
-2) Linux: ifconfig ou ip a
-   macOS: ifconfig | grep "inet "
-
-IP público (externo): acesse https://meuip.com.br
-`.trim();
-  }
-
-  // adicione outros atalhos aqui, se quiser…
-
-  return null;
-}
-
-/* =========================
-   3) Prompt de sistema (modelo)
-   ========================= */
+/*Prompt sistema*/
 
 const SYSTEM_PROMPT = `
 Você é um assistente de SUPORTE TÉCNICO e TECNOLOGIA.
@@ -148,18 +102,12 @@ Em caso de dúvida, NÃO recuse: peça um esclarecimento objetivo em UMA frase e
 Use linguagem clara e, quando for passo a passo, liste em itens numerados.
 `;
 
-/* =========================
-   4) Rota principal
-   ========================= */
-
 app.post('/api/generate', async (req, res) => {
   const { prompt } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: 'O prompt é obrigatório' });
   }
-
-  // Classificação: só recusar se for claramente fora de tecnologia
   const { isTech, confidence } = classifyTopic(prompt);
   if (!isTech && confidence >= 0.8) {
     return res.status(400).json({
@@ -169,14 +117,7 @@ app.post('/api/generate', async (req, res) => {
     });
   }
 
-  // Respostas rápidas (evitam chamar o modelo à toa)
-  const qa = quickAnswers(prompt);
-  if (qa) {
-    return res.json({ response: qa });
-  }
-
-  // Prompt do usuário com instruções adicionais
-  const enhancedPrompt = `
+const enhancedPrompt = `
 Responda em português.
 Seja direto e objetivo.
 Use listas (bullets) ou passos numerados quando for tutorial.
@@ -185,7 +126,6 @@ Pergunta do usuário: "${prompt}"
 `.trim();
 
   try {
-    // Modelo Gemini com instrução de sistema
     const model = genAI.getGenerativeModel({
       model: geminiModel,
       systemInstruction: SYSTEM_PROMPT
