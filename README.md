@@ -4,7 +4,19 @@
 ![Express](https://img.shields.io/badge/Express-Framework-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-Este projeto é uma aplicação de suporte técnico que utiliza a API Gemini para responder a perguntas técnicas, dúvidas de uso e configurações de produtos ou serviços.
+Aplicação de **suporte técnico automatizado** desenvolvida em **Node.js com Express**, integrada à **API Gemini (Google Generative AI)**.  
+O projeto tem como objetivo fornecer respostas automáticas para dúvidas técnicas, uso de sistemas e configurações de produtos ou serviços, simulando um sistema moderno de atendimento inteligente.
+
+---
+
+## 🧩 Tecnologias Utilizadas
+
+- **Node.js**
+- **Express**
+- **API Gemini (Google Generative AI)**
+- **JavaScript**
+- **dotenv**
+- **API REST**
 
 ---
 
@@ -89,4 +101,5 @@ Acesse em:
 | **dotenv**              | Leitura das variáveis de ambiente do `.env` |
 | **@google/generative-ai**| Biblioteca oficial do Google Gemini         |
 | **nodemon**             | Dependência de desenvolvimento para reiniciar o servidor automaticamente       |
+
 
